@@ -1,5 +1,3 @@
-import token
-
 from flask import Flask, request, jsonify, make_response
 import jwt
 import datetime
@@ -8,14 +6,14 @@ from functools import wraps
 
 app = Flask(__name__)
 loaded_model = (pickle.load
-                (open(r"C:\Users\Philip\Documents\Skola\Jupyter-notebook\PremiereLeague\final_model.sav", 'rb')))
+                (open(r"C:\Users\phili\OneDrive\Skrivbord\MachineLearingAPI\Machinelearning-Python\final_model.sav", 'rb')))
 
 app.config['SECRET_KEY'] = 'key'
 
 
 def load_accuracy():
     accuracy = pickle.load(
-        open(r"C:\Users\Philip\Documents\Skola\Jupyter-notebook\PremiereLeague\accuracy_score.pkl", 'rb'))
+        open(r"C:\Users\phili\OneDrive\Skrivbord\MachineLearingAPI\Machinelearning-Python\accuracy_score.pkl", 'rb'))
     return accuracy
 
 
@@ -37,16 +35,11 @@ def token_required(f):
     return decorated
 
 
-@app.route('/api/v1/ml')
-def unprotected():
-    return jsonify({'message': 'Not protected'})
-
-
 @app.route('/api/v1/ml/login')
 def login():
     auth = request.authorization
 
-    if auth and auth.password == 'tol':
+    if auth and auth.password == '123':
         token = jwt.encode({'user': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
                            app.config['SECRET_KEY'])
 
@@ -74,7 +67,7 @@ def predict():
                                         away_team_fouls, home_team_yellow_cards, away_team_yellow_cards,
                                         home_team_red_cards, away_team_red_cards]])
 
-    prediction = float(round(prediction[0], 2))
+    prediction = prediction[0]
 
     prediction_mapping = {
         0: 'Draw',
